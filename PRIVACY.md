@@ -5,7 +5,7 @@
 
 ## Overview
 
-The News Scraper Chrome Extension ("Extension", "we", "us") is committed to protecting your privacy. This privacy policy explains how we collect, use, and protect your information when you use our Chrome extension.
+The NewsScrape Chrome Extension ("Extension", "we", "us") is committed to protecting your privacy. This privacy policy explains how we collect, use, and protect your information when you use our Chrome extension.
 
 ## 1. Information We Collect
 
