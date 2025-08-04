@@ -171,7 +171,6 @@ For users in the European Union:
 ## 14. Data Protection Officer
 
 For privacy matters requiring escalation:
-- **DPO Contact**: dpo@yourdomain.com (if applicable)
 - **Supervisory Authority**: You may contact your local data protection authority
 
 ## 15. Cookies and Tracking
