@@ -87,7 +87,6 @@ Add any news website by providing:
 ## 🔒 Privacy & Permissions
 
 ### Required Permissions
-- `tabs` - Create temporary tabs for news website access
 - `scripting` - Extract article content from web pages
 - `identity` - Authenticate with Google for document creation
 - `activeTab` - Interact with extension popup
@@ -99,7 +98,7 @@ Add any news website by providing:
 - **Direct Google Docs integration** via official API
 - **No external servers** - all processing in your browser
 
-**Full Privacy Policy**: [https://yourusername.github.io/news-scraper-privacy/](https://yourusername.github.io/news-scraper-privacy/)
+**Full Privacy Policy**: (https://github.com/FinMckenzie/NewsScrape/blob/main/PRIVACY.md)
 
 ## 🛠️ Technical Details
 
@@ -178,7 +177,7 @@ This is a personal project, but feedback and suggestions are welcome:
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the (LICENSE) file for details.
 
 ## ⚠️ Disclaimer
 
@@ -190,8 +189,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🔗 Links
 
 - **Chrome Web Store**: [Soon to come]
-- **Privacy Policy**: [Soon to come]
-- **Support**: [Contact Email](finjmckenzie@gmail.com)
+- **Privacy Policy**: (https://github.com/FinMckenzie/NewsScrape/blob/main/PRIVACY.md)
+- **Support**: (finjmckenzie@gmail.com)
 
 ## 📞 Support
 
@@ -202,4 +201,4 @@ For questions, issues, or feature requests:
 
 ---
 Fin McKenzie
-Aug 4, 2025
+Aug 5, 2025
