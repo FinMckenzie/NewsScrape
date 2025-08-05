@@ -119,12 +119,10 @@ This extension complies with:
 - ✅ Google OAuth 2.0 Security Requirements
 - ✅ GDPR (General Data Protection Regulation)
 - ✅ CCPA (California Consumer Privacy Act)
-- ✅ SOX compliance for data handling
 
 ## 9. Chrome Extension Permissions
 
 ### Required Permissions and Usage
-- **`tabs`**: Create temporary tabs for accessing news websites
 - **`scripting`**: Inject content scripts to extract article text
 - **`identity`**: Authenticate with Google for document creation
 - **`activeTab`**: Access the currently active tab for popup interaction
@@ -143,8 +141,8 @@ Each permission is used solely for the extension's core functionality and not fo
 ## 11. Open Source Transparency
 
 This extension's code is open source and available for review:
-- **Repository**: [https://github.com/yourusername/news-scraper-extension](https://github.com/FinMckenzie/NewsScrape)
-- **Privacy Policy Source**: [https://github.com/yourusername/news-scraper-privacy](https://github.com/FinMckenzie/NewsScrape/blob/main/PRIVACY.md)
+- **Repository**: (https://github.com/FinMckenzie/NewsScrape)
+- **Privacy Policy Source**: (https://github.com/FinMckenzie/NewsScrape/blob/main/PRIVACY.md)
 - **Issue Reporting**: Use GitHub Issues for privacy concerns
 
 ## 12. Contact Information
@@ -189,9 +187,9 @@ This extension helps you scrape news articles and create Google Docs. We only st
 
 ---
 
-**Repository**: https://github.com/yourusername/NewsScrape
+**Repository**: https://github.com/FinMckenzie/NewsScrape
 **Extension Store Page**: [Coming soon]
-**Last Reviewed**: August 4, 2025
+**Last Reviewed**: August 5, 2025
 
 ---
 
