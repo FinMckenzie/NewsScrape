@@ -32,7 +32,7 @@
     }
   },
   "oauth2": {
-    "client_id": "489509569888-td8kl5lh968h5s3qqeonu7bf34d030v3.apps.googleusercontent.com",
+    "client_id": "insertyourown",
     "scopes": [
       "https://www.googleapis.com/auth/documents",
       "https://www.googleapis.com/auth/drive.file"
