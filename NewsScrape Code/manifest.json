@@ -1,13 +1,12 @@
 {
   "manifest_version": 3,
   "name": "NewsScraper",
-  "version": "1.0",
+  "version": "1.2",
   "description": "Scrape news articles from various sources and save them to Google Drive.",
   "permissions": [
     "storage",
     "identity",
     "scripting",
-    "tabs",
     "activeTab"
   ],
 "host_permissions": [
@@ -32,7 +31,7 @@
     }
   },
   "oauth2": {
-    "client_id": "insertyourown",
+    "client_id": "489509569888-hrvan7b5n56b1se4mrlfsgkp75r04o5v.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/documents",
       "https://www.googleapis.com/auth/drive.file"
