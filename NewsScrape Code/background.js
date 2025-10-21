@@ -9,6 +9,18 @@ class NewsScrapingManager {
     this.maxConcurrentTabs = 6;
     this.baseDelay = 1500;
     this.maxRetries = 3;
+    this.progressCallback = null;
+  }
+
+  setProgressCallback(callback) {
+    this.progressCallback = callback;
+  }
+
+  updateProgress(current, total, message) {
+    if (this.progressCallback) {
+      const percentage = Math.round((current / total) * 100);
+      this.progressCallback(percentage, message);
+    }
   }
 
   getDomain(url) {
@@ -29,12 +41,17 @@ class NewsScrapingManager {
     
     const sourceChunks = this.chunkArray(sources, this.maxConcurrentSources);
     const allResults = [];
+    let completedSources = 0;
+    const totalSources = sources.length;
+    
+    this.updateProgress(0, totalSources, 'Starting scrape...');
     
     for (let chunkIndex = 0; chunkIndex < sourceChunks.length; chunkIndex++) {
       const chunk = sourceChunks[chunkIndex];
       console.log(`BG: Processing source chunk ${chunkIndex + 1}/${sourceChunks.length}`);
       
       const chunkPromises = chunk.map(async (src) => {
+        this.updateProgress(completedSources, totalSources, `Scraping ${src.name}...`);
         console.log('BG: Scraping source:', src.name);
         const sourceArticles = [];
         
@@ -66,6 +83,8 @@ class NewsScrapingManager {
           }
         }
         
+        completedSources++;
+        this.updateProgress(completedSources, totalSources, `Completed ${src.name} - Found ${sourceArticles.length} articles`);
         console.log(`BG: Found ${sourceArticles.length} articles from ${src.name}`);
         return sourceArticles;
       });
@@ -82,6 +101,7 @@ class NewsScrapingManager {
       }
     }
     
+    this.updateProgress(100, 100, 'Processing complete - Creating document...');
     console.log(`BG: Total articles found: ${allResults.length}`);
     return allResults;
   }
@@ -96,14 +116,13 @@ class NewsScrapingManager {
       
       await this.waitForTabLoad(tabId, 35000);
       
-      // ENHANCED: Longer wait for pages that might need scrolling
       const domain = this.getDomain(url);
       const isLikelyListingPage = !url.match(/\/(article|story|post|news)\//) && 
-                                 !url.match(/\/\d{4}\/\d{2}\/\d{2}\//); // Not date-based URLs
+                                 !url.match(/\/\d{4}\/\d{2}\/\d{2}\//);
       
       if (isLikelyListingPage) {
         console.log(`BG: Detected listing page, waiting longer for dynamic content: ${url}`);
-        await new Promise(resolve => setTimeout(resolve, 4000)); // Extra wait for listing pages
+        await new Promise(resolve => setTimeout(resolve, 4000));
       } else {
         await new Promise(resolve => setTimeout(resolve, 2000));
       }
@@ -114,8 +133,7 @@ class NewsScrapingManager {
         files: ['scraperContentScript.js']
       });
       
-      // ENHANCED: Longer timeout for pages with scroll functionality
-      const timeout = isLikelyListingPage ? 15000 : 5000; // 15s for listing pages, 5s for articles
+      const timeout = isLikelyListingPage ? 15000 : 5000;
       
       const resp = await new Promise(res => {
         let didRespond = false;
@@ -157,8 +175,7 @@ class NewsScrapingManager {
       if (resp.linksToScrape && resp.linksToScrape.length > 0) {
         console.log(`BG: Found ${resp.linksToScrape.length} links to scrape for ${sourceName}`);
         
-        // ENHANCED: Increased batch size since scroll finds more quality links
-        const batchSize = 3; // Increased from 2
+        const batchSize = 3;
         for (let i = 0; i < resp.linksToScrape.length; i += batchSize) {
           const batch = resp.linksToScrape.slice(i, i + batchSize);
           
@@ -329,6 +346,18 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   
   if (msg.action === 'startScrape') {
     console.log('BG: startScrape received', msg);
+    
+// In background.js, modify the progress callback:
+scrapingManager.setProgressCallback((percentage, message) => {
+  // Send message to popup specifically
+  chrome.runtime.sendMessage({
+    action: 'progressUpdate',
+    percentage,
+    message
+  }).catch(() => {
+    // Ignore errors if popup is closed
+  });
+});
     
     scrapingManager.scrapeAllSources(msg.sources, msg.keywords)
       .then(articles => {
