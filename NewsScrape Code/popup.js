@@ -367,59 +367,64 @@ class EVContentScraper {
     return sources;
   }
 
-  onLaunchScraper() {
-    const sources = this.collectSources();
-    
-    if (!sources.length) {
-      this.updateStatus('Select at least 1 source', 'error');
+onLaunchScraper() {
+  const sources = this.collectSources();
+  
+  if (!sources.length) {
+    this.updateStatus('Select at least 1 source', 'error');
+    return;
+  }
+  
+  let keywordsToUse = this.keywords;
+  if (this.keywords.length === 0) {
+    if (!confirm('No keywords added. This will scrape ALL articles from selected sources. Continue?')) {
       return;
     }
-    
-    let keywordsToUse = this.keywords;
-    if (this.keywords.length === 0) {
-      if (!confirm('No keywords added. This will scrape ALL articles from selected sources. Continue?')) {
+    keywordsToUse = [''];
+  }
+  
+  this.btnScrape.disabled = true;
+  this.updateStatus('🔍 Starting scraper...', 'scraping');
+  this.setProgress(0);
+  
+  // Listen for progress updates
+  const progressListener = (message) => {
+    if (message.action === 'progressUpdate') {
+      this.setProgress(message.percentage);
+      this.updateStatus(message.message, 'scraping');
+    }
+  };
+  
+  chrome.runtime.onMessage.addListener(progressListener);
+  
+  chrome.runtime.sendMessage(
+    { action: 'startScrape', sources, keywords: keywordsToUse },
+    response => {
+      // Remove progress listener
+      chrome.runtime.onMessage.removeListener(progressListener);
+      
+      console.log('Popup got response:', response);
+      this.btnScrape.disabled = false;
+      this.setProgress(100);
+      
+      if (!response || !response.success) {
+        this.updateStatus(`❌ ${response?.error || 'Scrape failed'}`, 'error');
         return;
       }
-      keywordsToUse = [''];
+      
+      this.updateStatus('📄 Document created!', 'success');
+      this.divResults.innerHTML = '';
+      
+      const link = document.createElement('a');
+      link.href = `https://docs.google.com/document/d/${response.documentId}/edit`;
+      link.target = '_blank';
+      link.textContent = 'Open News Report';
+      link.className = 'doc-link';
+      
+      this.divResults.appendChild(link);
     }
-    
-    this.btnScrape.disabled = true;
-    this.updateStatus('🔍 Scraping articles...', 'scraping');
-    this.setProgress(10);
-    
-    const progressInterval = setInterval(() => {
-      const currentProgress = parseInt(this.fillProgress.style.width) || 10;
-      if (currentProgress < 90) {
-        this.setProgress(currentProgress + 5);
-      }
-    }, 2000);
-    
-    chrome.runtime.sendMessage(
-      { action: 'startScrape', sources, keywords: keywordsToUse },
-      response => {
-        clearInterval(progressInterval);
-        console.log('Popup got response:', response);
-        this.btnScrape.disabled = false;
-        this.setProgress(100);
-        
-        if (!response || !response.success) {
-          this.updateStatus(`❌ ${response?.error || 'Scrape failed'}`, 'error');
-          return;
-        }
-        
-        this.updateStatus('📄 Document created!', 'success');
-        this.divResults.innerHTML = '';
-        
-        const link = document.createElement('a');
-        link.href = `https://docs.google.com/document/d/${response.documentId}/edit`;
-        link.target = '_blank';
-        link.textContent = 'Open News Report';
-        link.className = 'doc-link';
-        
-        this.divResults.appendChild(link);
-      }
-    );
-  }
+  );
+}
 
   updateStatus(msg, type) {
     this.spanStatus.textContent = msg;
